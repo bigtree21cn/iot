@@ -2,6 +2,8 @@ from sqlalchemy import Column, String, Integer, DateTime, Float
 from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
+
+
 class Serializer(object):
     __public__ = None
     "Must be implemented by implementors"
