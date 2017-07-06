@@ -1,23 +1,14 @@
+# encoding: utf-8
+"""
+User database models
+--------------------
+"""
 from sqlalchemy import Column, String, Integer, DateTime, Float
-from sqlalchemy.ext.declarative import declarative_base
-
-Base = declarative_base()
-
-
-class Serializer(object):
-    __public__ = None
-    "Must be implemented by implementors"
-
-    def to_serializable_dict(self):
-        dict = {}
-        for public_key in self.__public__:
-            value = getattr(self, public_key)
-            if value:
-                dict[public_key] = value
-        return dict
+from app.extensions import db
+from app import Serializer
 
 
-class Measurement(Base, Serializer):
+class Measurement(db.Model, Serializer):
     __public__ = ['start_time', 'device_id', 'mea_id', 'c1', 'c2', 'c3']
     __tablename__ = 'measurements'
 
