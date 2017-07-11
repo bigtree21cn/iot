@@ -26,6 +26,5 @@ if __name__ == "__main__":
     #manager.add_command(CreateDB)
     #manager.add_command(StartApp)
     #manager.run()
-    print (myapp)
     #CreateDB().run()
     StartApp().run()

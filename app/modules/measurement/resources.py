@@ -8,11 +8,12 @@ RESTful API User resources
 
 import logging
 
-from flask import jsonify, request
+from flask import jsonify, request, abort, make_response
 from flask_restful import Resource, reqparse
 
 from app.extensions import api
 from .models import db, Measurement
+from .schemas import MeasurementSchema
 
 class MeasurementAPI(Resource):
     def get(self):
@@ -38,5 +39,15 @@ class MeasurementAPI(Resource):
         pass
 
     def post(self):
-        json_data = request.get_json(force=True)
-        return jsonify(json_data)
+        json_data = request.get_json()
+        if not json_data:
+            return make_response(jsonify({'message': "input incorrect data"}), 400)
+        measSchema = MeasurementSchema()
+        print (json_data)
+        data, error =  measSchema.load(json_data)
+        if len(0) > 0:
+            jsonify({'message': "failed"}, 400)
+        mea = Measurement(**data)
+        db.session.add(mea)
+        db.session.commit()
+        return jsonify({'message' : 'sucessfully'}, 201)
