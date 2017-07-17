@@ -13,12 +13,12 @@ class Measurement(db.Model, Serializer):
     __tablename__ = 'measurements'
 
     msg_id = Column(Integer, primary_key=True)
-    start_time = Column(DateTime, nullable=True)
+    start_time = Column(DateTime, nullable=False)
     device_id = Column(Integer, nullable=False, index=False)
-    mea_id = Column(Integer, nullable=False)
-    c1 = Column(Float, nullable=False, index=False)
-    c2 = Column(Float, nullable=False, index=False)
-    c3 = Column(Float, nullable=False, index=False)
+    mea_id = Column(Integer, nullable=True)
+    c1 = Column(Float, nullable=True, index=False)
+    c2 = Column(Float, nullable=True, index=False)
+    c3 = Column(Float, nullable=True, index=False)
 
     def __repr__(self):
         return '%s(%r)' % (self.__class__.__name__, self.msg_id)

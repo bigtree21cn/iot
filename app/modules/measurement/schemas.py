@@ -17,11 +17,19 @@ class MeasurementSchema(Schema):
     c2 = fields.Float()
     c3 = fields.Float()
 
+    #class Meta:
+    #    fields = ("start_time", "device_id", "c1", "c2", "c3")
+
     @post_load
     def make_Measurement(self, data):
-        m = Measurement()
-        m.__dict__.update(**data)
-        return m
+        return Measurement(**data)
+
+class MeaQuerySChema(Schema):
+    "This calss used to validate the input parameters for query measurement"
+    #dev_id = fields.Int(required=True, allow_none=False)
+    dev_id = fields.List(fields.Int, required=True, allow_none=False)
+    stime = fields.DateTime(required=False)
+    etime = fields.DateTime(required=False)
 
 
 

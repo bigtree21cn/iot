@@ -12,7 +12,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_restful import Api
 from flask_httpauth import HTTPBasicAuth
 
-db = SQLAlchemy(session_options={'autocommit': True})
+db = SQLAlchemy(session_options={'autocommit': False})
 api = Api()
 auth = HTTPBasicAuth()
 

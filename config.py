@@ -25,7 +25,7 @@ class BaseConfig(object):
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_DATABASE_URI = 'sqlite:///%s' % (os.path.join(PROJECT_ROOT, "example.db"))
 
-    DEBUG = False
+    DEBUG = True
     ERROR_404_HELP = False
 
     ENABLED_MODULES = (

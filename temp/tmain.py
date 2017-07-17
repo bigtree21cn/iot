@@ -43,7 +43,7 @@ from flask import  Flask, jsonify
 from flask_sqlalchemy import Model, SQLAlchemy
 from sqlalchemy import Column, String, Integer
 #from flask_marshmallow import Marshmallow, Schema
-from marshmallow import Schema, pre_load, fields
+from marshmallow import Schema, pre_load, fields, post_load,ValidationError
 
 
 
@@ -68,12 +68,32 @@ class AuthorSchema(Schema):
             data['name'] = "nothing found"
         return data
 
+    @post_load
+    def make_object(self, item):
+        return Author(**item)
+
 user_schame = AuthorSchema()
 users_schema=AuthorSchema(many=True)
 
 
+def validate_schema():
+    from app.modules.measurement.schemas import MeaQuerySChema
+    #di = dict(dev_id=[1,2,3])
+    try:
+        MeaQuerySChema(strict=True).validate({'dev_id': [1,2,3]})
+        MeaQuerySChema(strict=True).validate({'dev_id': [1]})
+        MeaQuerySChema(strict=True).validate({'dev_id': [1, 2, 3], 'stime': '2017-07-12T03:17:44.332'})
+        MeaQuerySChema(strict=True).validate({'dev_id': [1,2,3], 'stime': '2017-07-12T03:17:44.332', 'etime': '2017-07-12T03:17:44.332'})
+    except ValidationError as err:
+        print(err.messages)
+
+
 
 if __name__ == "__main__":
+
+    validate_schema()
+    exit(0)
+
     usr1 = Author(id=1, name="lihuaming")
     usr2 = Author(id=2, name="jeffrey")
     users = [usr1, usr2]
@@ -83,6 +103,11 @@ if __name__ == "__main__":
 
     users2 = users_schema.load(data, many=True)
     print (users2)
+
+    str3 = dict(id=5)
+    print ("-------::" )
+    print ((user_schame.load(str3)))
+
 
     from app.modules.measurement import models
     from app.modules.measurement import schemas
