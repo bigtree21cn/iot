@@ -14,7 +14,7 @@ COPY "./config.py" "./"
 #    rm -rf ~/.cache/pip && \
 #    apk del .build_dependencies
 #
-RUN pip install -r ./requirements.txt
+RUN pip install --timeout=300 -r ./requirements.txt
 
 COPY "./" "./"
 

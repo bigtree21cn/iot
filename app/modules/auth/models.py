@@ -15,6 +15,7 @@ class User(db.Model):
     username = db.Column(db.String(32), index=True)
     password_hash = db.Column(db.String(64))
     create_time = db.Column(db.DateTime, default=datetime.now)
+    enabled = db.Column(db.bool, default=True)
 
     def hash_password(self, password):
         self.password_hash = pwd_context.encrypt(password)
