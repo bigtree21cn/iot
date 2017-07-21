@@ -11,7 +11,7 @@ from app.extensions import db
 
 class User(db.Model):
     __tablename__ = 'users'
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     username = db.Column(db.String(32), index=True)
     password_hash = db.Column(db.String(64))
     create_time = db.Column(db.DateTime, default=datetime.now)
@@ -23,7 +23,7 @@ class User(db.Model):
     def verify_password(self, password):
         return pwd_context.verify(password, self.password_hash)
 
-    def generate_auth_token(self, expiration=600):
+    def generate_auth_token(self, expiration=6000):
         s = Serializer(db.app.config['SECRET_KEY'], expires_in=expiration)
         return s.dumps({'id': self.id})
 

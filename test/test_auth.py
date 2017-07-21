@@ -1,6 +1,8 @@
 import unittest
 from flask import current_app
-from app import create_app, db
+from app import create_app
+from app.extensions import db
+from app.modules.auth.models import User, Device
 
 class BasicTestCase(unittest.TestCase):
     """
@@ -28,3 +30,13 @@ class BasicTestCase(unittest.TestCase):
     def test_app_is_testing(self):
         """测试确保程序在测试配置中运行"""
         self.assertTrue(current_app.config['TESTING'])
+
+    def test_user_add(self):
+        user = User(username = 'ok')
+        user.hash_password('123456')
+        db.session.add(user)
+        db.session.commit()
+
+        user1  = User.query.filter_by(username = 'ok').first()
+        self.assertIsNotNone(user1)
+        self.assertEqual(user.username, user1.username)

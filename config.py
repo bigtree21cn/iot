@@ -49,7 +49,7 @@ class DevelopmentConfig(BaseConfig):
 #        'mysql+pymysql://root:123456@10.140.1.17/iot?charset=utf8'
 
 class TestingConfig(BaseConfig):
-    TESTING = True
+    DEBUG = True
 
     # Use in-memory SQLite database for testing
     SQLALCHEMY_DATABASE_URI = os.environ.get('DEV_DATABASE_URL') or \

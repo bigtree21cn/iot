@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import os
 
-from flask import abort, request, jsonify, g, url_for
+from flask import abort, request, jsonify, g, url_for, make_response
 from flask_httpauth import HTTPBasicAuth
 from flask_restful import Resource
 
@@ -15,20 +15,25 @@ def verify_password(username_or_token, password):
     user = User.verify_auth_token(username_or_token)
     if not user:
         # try to authenticate with username/password
-        user = User.query.filter_by(username=username_or_token).first()
+        user = User.query.filter_by(username = username_or_token).first()
         if not user or not user.verify_password(password):
             return False
     g.user = user
-    return True
+    return user.enabled
 
 
-class authAPI(Resource):
+@auth.error_handler
+def unauthorized():
+    return make_response(jsonify({'error': 'Unauthorized access'}), 401)
+
+class UserAPI(Resource):
+    @auth.login_required
     def get(self, id):
-        id = request.json.get('id')
-        user = User.query.get(id)
+        uname = request.json.get('username')
+        user = User.query.filter_by(username=uname)
         if not user:
             abort(400)
-        return jsonify({'username': user.username})
+        return make_response({'username': uname}, 200)
 
     def put(self):
         pass
@@ -47,6 +52,11 @@ class authAPI(Resource):
         return (jsonify({'username': user.username}), 201,
                 {'Location': url_for('get_user', id=user.id, _external=True)})
 
+class TokenAPI(Resource):
+    @auth.login_required
+    def get(self):
+        token = g.user.generate_auth_token()
+        return make_response({'username': token}, 200)
 
 '''
 @db.app.route('/api/token')
