@@ -7,6 +7,7 @@ from flask_restful import Resource
 
 from app.extensions import auth
 from .models import db, User, Device
+from .schemas import UserSchema
 
 
 @auth.verify_password
@@ -49,14 +50,20 @@ class UserAPI(Resource):
         user.hash_password(password)
         db.session.add(user)
         db.session.commit()
-        return (jsonify({'username': user.username}), 201,
-                {'Location': url_for('get_user', id=user.id, _external=True)})
+        data, errors = UserSchema().dump(user)
+        if errors is not None:
+            return make_response(jsonify(data) , 200)
+        else:
+            return make_response(jsonify(errors), 400)
+        #return (jsonify({'username': user.username}), 201,
+        #        {'Location': url_for('get_user', id=user.id, _external=True)})
+
 
 class TokenAPI(Resource):
     @auth.login_required
     def get(self):
         token = g.user.generate_auth_token()
-        return make_response({'username': token}, 200)
+        return make_response(jsonify({'username': token}), 200)
 
 '''
 @db.app.route('/api/token')

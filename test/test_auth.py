@@ -1,34 +1,31 @@
 import unittest
+
 from flask import current_app
 from app import create_app
 from app.extensions import db
 from app.modules.auth.models import User, Device
+from app.modules.auth.schemas import UserSchema
+from datetime import datetime, timedelta
+
 
 class BasicTestCase(unittest.TestCase):
-    """
-    setUP()和tearDown()方法分别在各测试前后运行，
-    并且名字以test_开头的函数都作为测试执行。
-
-    """
     def setUp(self):
-        """每个单元测试运行之前被调用"""
         self.app = create_app('testing')
         self.app_context = self.app.app_context()
         self.app_context.push()
         db.create_all()
 
     def tearDown(self):
-        """每个单元测试执行结束后会调用"""
         db.session.remove()
         db.drop_all()
         self.app_context.pop()
 
     def test_app_exists(self):
-        """测试确保程序实例存在"""
+        """test the application is existing"""
         self.assertFalse(current_app is None)
 
     def test_app_is_testing(self):
-        """测试确保程序在测试配置中运行"""
+        """test the appliction running with TEST config"""
         self.assertTrue(current_app.config['TESTING'])
 
     def test_user_add(self):
@@ -36,7 +33,21 @@ class BasicTestCase(unittest.TestCase):
         user.hash_password('123456')
         db.session.add(user)
         db.session.commit()
-
         user1  = User.query.filter_by(username = 'ok').first()
+        print (UserSchema().dump(user1).data)
         self.assertIsNotNone(user1)
         self.assertEqual(user.username, user1.username)
+
+    def test_device(self):
+        dev = Device(id = 1, user = 'ok11', expire_time=datetime.utcnow()+timedelta(days=1))
+        db.session.add(dev)
+        db.session.commit()
+        self.assertTrue(Device.is_valid_device(1, 'ok11'))
+        self.assertFalse(Device.is_valid_device(2, 'ok11'))
+        self.assertFalse(Device.is_valid_device(1, 'nok'))
+
+    def test_device_expired(self):
+        dev = Device(id = 2, user = 'ok11', expire_time=datetime.utcnow()+timedelta(days=-1))
+        db.session.add(dev)
+        db.session.commit()
+        self.assertFalse(Device.is_valid_device(2, 'ok11'))

@@ -7,6 +7,7 @@ from itsdangerous import (TimedJSONWebSignatureSerializer
 from passlib.apps import custom_app_context as pwd_context
 
 from app.extensions import db
+from flask import g
 
 
 class User(db.Model):
@@ -14,7 +15,7 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     username = db.Column(db.String(32), index=True)
     password_hash = db.Column(db.String(64))
-    create_time = db.Column(db.DateTime, default=datetime.now)
+    create_time = db.Column(db.DateTime, default=datetime.utcnow)
     enabled = db.Column(db.Boolean, default=True)
 
     def hash_password(self, password):
@@ -43,12 +44,12 @@ class Device(db.Model):
     __tablename__ = 'devices'
     id = db.Column(db.Integer, primary_key=True)
     user = db.Column(db.String(32), index=True)
-    create_time = db.Column(db.DateTime, default=datetime.now)
+    create_time = db.Column(db.DateTime, default=datetime.utcnow)
     expire_time = db.Column(db.DateTime)
 
     @staticmethod
-    def is_valid_device(id):
-        dev = User.query.get(id)
+    def is_valid_device(id, username):
+        dev = Device.query.filter((Device.id == id) & (Device.user == username)).first()
         if not dev or dev.expire_time < datetime.now():
             return False
         return True

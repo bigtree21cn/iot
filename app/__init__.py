@@ -6,6 +6,8 @@ import logging
 import os
 import sys
 from flask import Flask
+from logging.handlers import RotatingFileHandler
+from logging import Formatter
 
 '''
 from functools import wraps
@@ -98,14 +100,21 @@ def create_app(flask_config_name=None, **kwargs):
             sys.exit(1)
         raise
 
+    log_file_handler = RotatingFileHandler('iot.log')
+    log_file_handler.setFormatter(Formatter('%(asctime)s %(filename)s[line:%(lineno)d] %(levelname)s %(message)s'))
+    log_file_handler.setLevel(logging.INFO)
+    app.logger.addHandler(log_file_handler)
+
     if app.debug:
-        logging.getLogger('flask_oauthlib').setLevel(logging.DEBUG)
         app.logger.setLevel(logging.DEBUG)
+
 
     from . import extensions
     extensions.init_app(app)
 
     from . import modules
     modules.init_app(app)
+
+    app.logger.debug('application initializing done')
 
     return app
