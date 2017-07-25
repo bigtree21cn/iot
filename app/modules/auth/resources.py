@@ -39,6 +39,13 @@ class UserAPI(Resource):
     def put(self):
         pass
 
+    '''
+    example:
+    {
+        "username" :  "ok111" ,
+        "password" :  "123456"
+    }
+    '''
     def post(self):
         username = request.json.get('username')
         password = request.json.get('password')

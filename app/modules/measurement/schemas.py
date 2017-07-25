@@ -18,7 +18,10 @@ class MeasurementSchema(Schema):
     c3 = fields.Float()
 
     class Meta:
-        exclude = ("msg_id", "device_id", "mea_id")
+        #load_only = ("msg_id",)
+        load_only = ("msg_id", "device_id", "mea_id")
+
+
 
     @post_load
     def make_Measurement(self, data):

@@ -69,21 +69,14 @@ class MeasurementAPI(Resource):
         json_data = request.get_json()
         if not json_data:
             return make_response(jsonify({'message': "input incorrect data"}), 400)
-        try:
-            data, error = MeaQuerySChema(strict=True).validate(json_data)
-        except ValidationError as error:
-            print(error.messages)
-            return make_response(jsonify(error.messages), 400)
 
         try:
-            data, error =  MeasurementSchema(partial=True).load(json_data, strict=True)
+            data, error =  MeasurementSchema(partial=True, strict=True).load(json_data)
         except ValidationError as error:
             #current_app.logger.error(error.messages)
             return make_response(jsonify(error.messages), 400)
-
         print (json_data)
-        print (data)
-        print (error)
+        print (MeasurementSchema().dump(data))
         db.session.add(data)
         db.session.commit()
         return make_response(jsonify({'message' : 'sucessfully'}), 201)
