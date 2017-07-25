@@ -17,8 +17,8 @@ class MeasurementSchema(Schema):
     c2 = fields.Float()
     c3 = fields.Float()
 
-    #class Meta:
-    #    fields = ("start_time", "device_id", "c1", "c2", "c3")
+    class Meta:
+        exclude = ("msg_id", "device_id", "mea_id")
 
     @post_load
     def make_Measurement(self, data):

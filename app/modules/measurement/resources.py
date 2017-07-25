@@ -8,12 +8,12 @@ RESTful API User resources
 
 import logging
 
-from flask import jsonify, request, abort, make_response
+from flask import jsonify, request, abort, make_response, current_app
 from flask_restful import Resource, reqparse
 from marshmallow import ValidationError
 from datetime import datetime
 
-from app.extensions import api
+from app.extensions import auth, api
 from .models import db, Measurement
 from .schemas import MeasurementSchema, MeaQuerySChema
 
@@ -22,6 +22,7 @@ class MeasurementAPI(Resource):
     '''
     example: http://127.0.0.1:5000/api/measurements/?dev_id=1&dev_id=0&stime=2017-07-11T03:17:44.332&etime=2017-07-21T03:17:44.332
     '''
+    @auth.login_required
     def get(self):
         args = dict(request.args)   # convert to dictionary, and each value is a list
         if 'etime' in args and 'stime' not in args:
@@ -63,14 +64,23 @@ class MeasurementAPI(Resource):
       "c3": 22
     }
     '''
+    @auth.login_required
     def post(self):
         json_data = request.get_json()
         if not json_data:
             return make_response(jsonify({'message': "input incorrect data"}), 400)
-        measSchema = MeasurementSchema()
-        data, error =  measSchema.load(json_data)
-        if len(error) > 0:
-            return make_response(jsonify(error), 400)
+        try:
+            data, error = MeaQuerySChema(strict=True).validate(json_data)
+        except ValidationError as error:
+            print(error.messages)
+            return make_response(jsonify(error.messages), 400)
+
+        try:
+            data, error =  MeasurementSchema(partial=True).load(json_data, strict=True)
+        except ValidationError as error:
+            #current_app.logger.error(error.messages)
+            return make_response(jsonify(error.messages), 400)
+
         print (json_data)
         print (data)
         print (error)

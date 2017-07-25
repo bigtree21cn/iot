@@ -6,14 +6,15 @@ User database models
 from sqlalchemy import Column, String, Integer, DateTime, Float
 from app.extensions import db
 from app import Serializer
+from datetime import datetime
 
 
 class Measurement(db.Model, Serializer):
     __public__ = ['start_time', 'device_id', 'mea_id', 'c1', 'c2', 'c3']
     __tablename__ = 'measurements'
 
-    msg_id = Column(Integer, primary_key=True)
-    start_time = Column(DateTime, nullable=False)
+    msg_id = Column(Integer, primary_key=True, autoincrement=True)
+    start_time = Column(DateTime, nullable=False, default=datetime.utcnow)
     device_id = Column(Integer, nullable=False, index=False)
     mea_id = Column(Integer, nullable=True)
     c1 = Column(Float, nullable=True, index=False)
