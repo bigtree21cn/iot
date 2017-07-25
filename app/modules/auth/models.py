@@ -15,7 +15,7 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     username = db.Column(db.String(32), index=True)
     password_hash = db.Column(db.String(64))
-    create_time = db.Column(db.DateTime, default=datetime.utcnow)
+    create_time = db.Column(db.DateTime, default=datetime.utcnow())
     enabled = db.Column(db.Boolean, default=True)
 
     def hash_password(self, password):
@@ -44,7 +44,7 @@ class Device(db.Model):
     __tablename__ = 'devices'
     id = db.Column(db.Integer, primary_key=True)
     user = db.Column(db.String(32), index=True)
-    create_time = db.Column(db.DateTime, default=datetime.utcnow)
+    create_time = db.Column(db.DateTime, default=datetime.utcnow())
     expire_time = db.Column(db.DateTime)
 
     @staticmethod
