@@ -47,7 +47,8 @@ class MeasurementAPI(Resource):
                                                Measurement.start_time.between(args['stime'], args['etime'])).all()
         else:
             meas = Measurement.query.filter(Measurement.device_id.in_(args['dev_id'])).all()
-        return make_response(jsonify(MeasurementSchema(many=True).dump(obj=meas)), 200)
+
+        return make_response(jsonify(MeasurementSchema(many=True).dump(obj=meas).data), 200)
 
 
     def put(self):
