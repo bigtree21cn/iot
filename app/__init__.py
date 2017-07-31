@@ -8,6 +8,7 @@ import sys
 from flask import Flask
 from logging.handlers import RotatingFileHandler
 from logging import Formatter
+from flask_cors import CORS, cross_origin
 
 '''
 from functools import wraps
@@ -71,6 +72,7 @@ def create_app(flask_config_name=None, **kwargs):
     Entry point to the Flask RESTful Server application.
     """
     app = Flask(__name__, **kwargs)
+    CORS(app)
 
     env_flask_config_name = os.getenv('FLASK_CONFIG')
     if not env_flask_config_name and flask_config_name is None:
