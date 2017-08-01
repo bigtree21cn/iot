@@ -31,7 +31,10 @@ class BaseConfig(object):
     ENABLED_MODULES = (
         'auth',
         'measurement',
+        'frontend',
     )
+
+    JSON_SORT_KEYS = False
 
     STATIC_ROOT = os.path.join(PROJECT_ROOT, 'static')
 
