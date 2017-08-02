@@ -81,3 +81,9 @@ class MeasurementAPI(Resource):
         db.session.add(data)
         db.session.commit()
         return make_response(jsonify({'message' : 'sucessfully'}), 201)
+
+class LastDataAPI(Resource):
+    @auth.login_required
+    def get(self):
+        meas = Measurement.query.filter(Measurement.device_id==1).order_by(Measurement.msg_id.desc()).first()
+        return make_response(jsonify(MeasurementSchema().dump(obj=meas).data), 200)

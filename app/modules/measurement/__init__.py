@@ -10,5 +10,6 @@ def init_app(app, **kwargs):
     """
     Init users module.
     """
-    from .resources import api, MeasurementAPI
+    from .resources import api, MeasurementAPI, LastDataAPI
     api.add_resource(MeasurementAPI, '/api/measurements/', endpoint='measurement')
+    api.add_resource(LastDataAPI, '/api/last/', endpoint='gauge')
