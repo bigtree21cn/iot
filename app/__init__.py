@@ -8,7 +8,7 @@ import sys
 from flask import Flask
 from logging.handlers import RotatingFileHandler
 from logging import Formatter
-from flask_cors import CORS, cross_origin
+from flask_cors import CORS
 
 '''
 from functools import wraps

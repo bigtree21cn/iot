@@ -1,10 +1,7 @@
   <script src="static/jquery-3.2.1.js"></script>
   <script src="static/loader.js"></script>
 
-
   <script type="text/javascript">
-
-
 google.charts.load('current', {
   packages: ['corechart', 'line']
 });
@@ -88,7 +85,8 @@ function draw_chart() {
       console.dir(xhr);
     })
     // Code to run regardless of success or failure;
-    .always(function(xhr, status) {;
+    .always(function(xhr, status) {
+        setTimeout(draw_chart, {{config['TIMER_PULL_ALL']}});
     });
 } // draw_chart
 
@@ -131,7 +129,11 @@ function draw_Gauge() {
       chart.draw(data, options);
 
     }) // end done
-} // end drawGauge
+    // Code to run regardless of success or failure;
+    .always(function(xhr, status) {
+        setTimeout(draw_Gauge, {{config['TIMER_PULL_LAST']}});
+    }) // end always
+} // end draw_Gauge
 
 
 </script>
@@ -139,3 +141,4 @@ function draw_Gauge() {
 
   <div id="chart_div"></div>
   <div id="gauge_div"></div>
+  <p> timer_last = {{config['TIMER_PULL_LAST']}} </p>

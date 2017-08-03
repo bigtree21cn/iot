@@ -76,8 +76,9 @@ class MeasurementAPI(Resource):
         except ValidationError as error:
             #current_app.logger.error(error.messages)
             return make_response(jsonify(error.messages), 400)
+        print ("-------------")
         print (json_data)
-        print (MeasurementSchema().dump(data))
+        print (data)
         db.session.add(data)
         db.session.commit()
         return make_response(jsonify({'message' : 'sucessfully'}), 201)

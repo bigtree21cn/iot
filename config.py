@@ -37,6 +37,8 @@ class BaseConfig(object):
     JSON_SORT_KEYS = False
 
     STATIC_ROOT = os.path.join(PROJECT_ROOT, 'static')
+    TIMER_PULL_LAST = 5000
+    TIMER_PULL_ALL = 10000
 
 
 class ProductionConfig(BaseConfig):

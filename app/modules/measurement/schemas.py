@@ -19,7 +19,7 @@ class MeasurementSchema(Schema):
 
     class Meta:
         #load_only = ("msg_id",)
-        fields = ("start_time", "c1", "c2", "c3")
+        #fields = ("start_time", "c1", "c2", "c3")
         load_only = ("msg_id", "device_id", "mea_id")
         ordered = True
 
