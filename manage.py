@@ -6,7 +6,7 @@ App management tool
 from flask_script import Manager, Command
 from app import create_app
 
-myapp = create_app('development')
+myapp = create_app()
 manager = Manager(myapp)
 
 
@@ -23,8 +23,8 @@ class StartApp(Command):
 
 
 if __name__ == "__main__":
-    #manager.add_command(CreateDB)
-    #manager.add_command(StartApp)
-    #manager.run()
+    manager.add_command('CreateDB', CreateDB())
+    manager.add_command('StartApp', StartApp())
+    manager.run()
     #CreateDB().run()
-    StartApp().run()
+    #StartApp().run()

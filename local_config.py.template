@@ -1,8 +1,16 @@
+import os
 from config import DevelopmentConfig
 
 
+
+'''please map you database to local host with docker volumn.
+For MySQL you need mapping to local host as startup MySql docker instance
+For SqlLite mapping to your host path to container /data/
+'''
 class LocalConfig(DevelopmentConfig):
+    TIMER_PULL_LAST = 60000    # fresh the gauge chart each one minute
+    TIMER_PULL_ALL = 120000    # fresh the line chart each 2 minutes
     DEBUG = True
     SQLALCHEMY_DATABASE_URI = os.environ.get('DEV_DATABASE_URL') or \
-                              'sqlite:///dev.sqlite'
+                              'sqlite:////data/dev.sqlite'
                               #'mysql+pymysql://root:123456@10.140.1.17/iot?charset=utf8'

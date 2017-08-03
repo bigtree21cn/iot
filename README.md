@@ -1,20 +1,29 @@
 # iot
-
+Implement a IoT device event backend and frontend. It supports restful API and MQTT(to be done) to push the data from device to backend.
+Backend support different database e.g. sqlite3, MySQL etc. A lightweight front-end is also going to implement and use to fetch  data from backend
+to a web page.  Data pushing and fetching supports both user and device authentication.
+---
 
 Build and Deploy
 =================
 
 1. pull source code
 2. goto the source root directory
+    ```Bash
    sudo docker build -t iot .
+   ```
 3. running the service
-   sudo docker run --name myiot -d -p 5000:5000 -v /yourdir/local_config.py:./local_config.py
-   Note:
-        In development environment, its will use sqllite database. If you want to chagne the database, please change the database
-        connection in local_config.py
+   ```Bash
+   sudo docker run --name myiot -d -p 5000:5000
+   sudo docker run --name myiot -d -p 5555:5000 -v /home/jefli/PycharmProjects/tmp/local_config.py:/opt/www/local_config.py  -v <yourdir>:/data/ iot
+   ```
+   ```Note:
+        In development environment, its will use sqllite database. If you want to chagne the database, please change the database connection in local_config.py
+   ```
 4. create database
-   sudo docker exec python3 manage.py createDB myiot
-
+    ```Bash
+   sudo docker exec myiot python3 manage.py CreateDB
+    ```
 
 API Documentation
 =================

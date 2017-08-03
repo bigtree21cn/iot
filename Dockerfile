@@ -25,4 +25,4 @@ RUN chown -R nobody "." && \
 
 USER nobody
 #CMD [ "invoke", "app.run", "--no-install-dependencies", "--host", "0.0.0.0" ]
-CMD [ "python3", "manage.py" ]
+CMD [ "python3", "manage.py", "startApp" ]
